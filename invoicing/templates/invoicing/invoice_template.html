@@ -1,0 +1,17 @@
+<!-- invoicing/templates/invoicing/pdf_template.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice</title>
+</head>
+<body>
+    <h1>Invoice {{ invoice.invoice_number }}</h1>
+    <p>Issue Date: {{ invoice.issue_date }}</p>
+    <!-- Add other invoice details here -->
+
+    <h2>Client Information</h2>
+    <p>Name: {{ invoice.client.name }}</p>
+    <p>Email: {{ invoice.client.email }}</p>
+    <!-- Add other client details here -->
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice Details</title>
+</head>
+<body>
+    <h1>Invoice Details</h1>
+
+    <strong>Invoice Number:</strong> {{ invoice.invoice_number }}<br>
+    <strong>Trip Name:</strong> {{ invoice.trip_name }}<br>
+    <strong>Issue Date:</strong> {{ invoice.issue_date }}<br>
+    <strong>Due Date:</strong> {{ invoice.due_date }}<br>
+    <!-- Add more details as needed -->
+
+    <a href="{% url 'view_invoices' %}">Back to Invoices</a>
+</body>
+</html>

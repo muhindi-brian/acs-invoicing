@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Invoices</title>
+</head>
+<body>
+
+    <h1>Invoices for {{ request.user.client.name }}</h1>
+
+    {% for invoice in invoices %}
+    <li><a href="{% url 'view_invoice_details' pk=invoice.pk %}">{{ invoice.invoice_number }} - {{ invoice.trip_name }} - {{ invoice.amount }}</a></li>
+    {% endfor %}
+    <!--<h1>Invoices for {{ request.user.client.name }}</h1>
+
+    {% if invoices %}
+        <ul>
+            {% for invoice in invoices %}
+                <li>
+                    <strong>Invoice Number:</strong> {{ invoice.invoice_number }}<br>
+                    <strong>Trip Name:</strong> {{ invoice.trip_name }}<br>
+                    <strong>Amount:</strong> {{ invoice.amount }} {{ invoice.currency }}<br>
+                    <a href="{% url 'view_invoice_details' invoice.id %}">View Details</a>
+                    <form action="{% url 'make_payment' invoice.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Make Payment</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No invoices available.</p>
+    {% endif %}-->
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!-- templates/invoicing/invoice_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice List</title>
+</head>
+<body>
+    {% if company %}
+        <img src="{{ company.logo_url }}" alt="{{ company.name }} Logo" style="max-width: 100px; max-height: 100px;">
+        <h2>{{ company.name }}</h2>
+        <p>{{ company.address }}</p>
+        <p>Tagline: Feel the Beats & Sounds of Africa</p>
+        <p>
+            Tel: {{ company.phone_number }}<br>
+            Mobile: {{ company.mobile_number }}<br>
+            Email: {{ company.email }}<br>
+            Website: <a href="{{ company.website }}" target="_blank">{{ company.website }}</a>
+        </p>
+    {% endif %}
+
+    <h1>Invoice List</h1>
+    <ul>
+        {% for invoice in invoices %}
+            <li>
+                <strong>Invoice Number:</strong> {{ invoice.invoice_number }}<br>
+                <strong>Date:</strong> {{ invoice.issue_date }}<br>
+                <!-- Add other fields as needed -->
+                <!-- Add the "Download PDF" link -->
+                <p><a href="{% url 'download_pdf' pk=invoice.pk %}" target="_blank">Download PDF</a></p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

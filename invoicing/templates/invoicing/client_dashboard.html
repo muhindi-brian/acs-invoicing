@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ request.user.client.name }}!</h1>
+    <h2>Your Invoices:</h2>
+
+    <ul>
+        {% for invoice in invoices %}
+            <li>
+                <a href="{% url 'view_invoice_details' pk=invoice.id %}">{{ invoice.invoice_number }}</a>
+                <!--<a href="{% url 'view_invoice_details' invoice_id=invoice.id %}">{{ invoice.invoice_number }}</a> -->
+                {{ invoice.trip_name }} - 
+                {{ invoice.amount }}
+                <form method="post" action="{% url 'make_payment' invoice_id=invoice.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Make Payment</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
