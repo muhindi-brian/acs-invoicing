@@ -1,0 +1,19 @@
+<!-- choose_payment_method.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>Choose Payment Method</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label for="paypal">Paypal</label>
+    <input type="radio" name="payment_method" value="paypal" required>
+    <br>
+    <label for="pesapal">Pesapal</label>
+    <input type="radio" name="payment_method" value="pesapal" required>
+    <br>
+    <label for="mpesa">Mpesa</label>
+    <input type="radio" name="payment_method" value="mpesa" required>
+    <br>
+    <input type="submit" value="Continue">
+  </form>
+{% endblock %}

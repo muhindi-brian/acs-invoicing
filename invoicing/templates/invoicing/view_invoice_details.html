@@ -12,6 +12,18 @@
     <strong>Due Date:</strong> {{ invoice.due_date }}<br>
     <!-- Add more details as needed -->
 
+    <table>
+        <tr>
+            <th>Field</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Invoice Number</td>
+            <td>{{ invoice.invoice_number }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'make_payment' invoice.id %}">Make Payment</a>
+
     <a href="{% url 'view_invoices' %}">Back to Invoices</a>
 </body>
 </html>

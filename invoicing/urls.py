@@ -4,7 +4,7 @@ from .views import invoice_list
 from .views import DownloadPDFView 
 from .views import CustomSignupView
 from .views import client_dashboard, client_login_redirect
-from .views import view_invoices, view_invoice_details, make_payment, payment_notification
+from .views import view_invoices, view_invoice_details, make_payment, payment_notification, paypal_payment
 from django.contrib.auth.views import LoginView, LogoutView
 
 
@@ -19,6 +19,7 @@ urlpatterns = [
     path('view_invoice_details/<int:invoice_id>/', view_invoice_details, name='view_invoice_details'),
     path('view_invoice_details/<int:pk>/', view_invoice_details, name='view_invoice_details'),
     path('make-payment/<int:invoice_id>/', make_payment, name='make_payment'),
+    path('paypal-payment/<int:invoice_id>/', paypal_payment, name='paypal_payment'),
 
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),

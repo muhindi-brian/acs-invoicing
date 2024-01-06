@@ -13,8 +13,11 @@ from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
 
 from .models import Invoice
-from .models import Invoice, Company, Client
+from .models import Invoice, Company, Client, PaymentMethod  
 from allauth.account.views import SignupView
+from django.urls import reverse
+from django.conf import settings
+from paypal.standard.forms import PayPalPaymentsForm
 
 
 def invoice_list(request):
@@ -85,32 +88,55 @@ def view_invoices(request):
     # return render(request, 'invoicing/view_invoice_details.html', {'invoice': invoice})
 
 def view_invoice_details(request, invoice_id):
-    # Your view logic here
-    return HttpResponse(f"This is the view for invoice {invoice_id}.")
-
-
+    invoice = get_object_or_404(Invoice, pk=invoice_id)
+    return render(request, 'invoicing/view_invoice_details.html', {'invoice': invoice})
 
 
 def make_payment(request, invoice_id):
-    # Your payment logic here
     invoice = get_object_or_404(Invoice, pk=invoice_id)
 
-    # Create a PayPal Payments form
-    paypal_dict = {
-        'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': str(invoice.total),  # Invoice total amount
-        'item_name': f'Invoice {invoice.invoice_number}',
-        'invoice': f'{invoice.invoice_number}',
-        'currency_code': 'USD',  # Change to your currency code
-        'notify_url': request.build_absolute_uri(reverse('paypal-ipn')),
-        'return_url': request.build_absolute_uri(reverse('payment_success')),
-        'cancel_return': request.build_absolute_uri(reverse('payment_cancel')),
-    }
+    # Assuming you have a payments model with different modes like Paypal, Pesapal, Mpesa
+    # Replace PaymentMethod with your actual model for storing payment methods
+    payment_methods = PaymentMethod.objects.all()  # Replace PaymentMethod with your actual model
 
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {'form': form, 'invoice': invoice}
-    return render(request, 'make_payment.html', context)
+    # Automatically pick the amount and currency from the invoice
+    amount = invoice.total
+    currency = invoice.currency
 
+    if request.method == 'POST':
+        selected_method = request.POST.get('payment_method')
+        # Redirect to the specific payment method's view based on user selection
+        if selected_method == 'paypal':
+            return redirect('paypal_payment', invoice_id=invoice_id)
+        elif selected_method == 'pesapal':
+            return redirect('pesapal_payment', invoice_id=invoice_id)
+        elif selected_method == 'mpesa':
+            return redirect('mpesa_payment', invoice_id=invoice_id)
+        else:
+            # Handle invalid or unsupported payment method
+            pass
+
+    context = {'invoice': invoice, 'amount': amount, 'currency': currency, 'payment_methods': payment_methods}
+    return render(request, 'invoicing/choose_payment_method.html', context)
+
+def payment_notification(sender, **kwargs):
+    ipn_obj = sender
+
+    if ipn_obj.payment_status == "Completed":
+        # Handle completed payments
+        # Your logic here
+        pass
+
+valid_ipn_received.connect(payment_notification)
+
+
+def paypal_payment(request, invoice_id):
+    invoice = Invoice.objects.get(pk=invoice_id)
+
+    # Your PayPal payment logic here
+    # For simplicity, we'll just render a template
+    context = {'invoice': invoice}
+    return render(request, 'invoicing/paypal_payment.html', context)
 
 @csrf_exempt
 def payment_notification(sender, **kwargs):
@@ -119,7 +145,11 @@ def payment_notification(sender, **kwargs):
     if ipn_obj.payment_status == ST_PP_COMPLETED:
         # Handle completed payments
         # Your logic here
-        pass
+        invoice_id = ipn_obj.invoice
+        invoice = Invoice.objects.get(pk=invoice_id)
+
+        # Update the invoice status or perform any other necessary actions
+
+    return HttpResponse("OK")
 
 valid_ipn_received.connect(payment_notification)
-

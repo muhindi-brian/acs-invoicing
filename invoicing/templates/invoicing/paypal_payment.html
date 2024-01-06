@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal Payment</title>
+</head>
+<body>
+
+<h2>PayPal Payment</h2>
+
+<form method="post" action="https://www.sandbox.paypal.com/?_ga=1.116872838.1036507234.1704354091">
+    {% csrf_token %}
+    <input type="hidden" name="cmd" value="_xclick">
+    <input type="hidden" name="business" value="{{ settings.PAYPAL_RECEIVER_EMAIL }}">
+    <input type="hidden" name="item_name" value="{{ 'Invoice ' }}{{ invoice.invoice_number }}">
+    <input type="hidden" name="amount" value="{{ invoice.total }}">
+    <input type="hidden" name="currency_code" value="{{ invoice.currency }}">
+    <input type="hidden" name="invoice" value="{{ invoice.invoice_number }}">
+    <input type="hidden" name="notify_url" value="{{ request.build_absolute_uri(reverse('paypal-ipn')) }}">
+    <input type="hidden" name="return" value="{{ request.build_absolute_uri(reverse('payment_success')) }}">
+    <input type="hidden" name="cancel_return" value="{{ request.build_absolute_uri(reverse('payment_cancel')) }}">
+
+    <input type="submit" value="Pay with PayPal">
+</form>
+
+</body>
+</html>

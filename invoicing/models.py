@@ -94,3 +94,11 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.client.name if self.client else self.new_client_name}"
+    
+
+class PaymentMethod(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
